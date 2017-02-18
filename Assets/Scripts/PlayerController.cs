@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private Camera camera;
     private Rigidbody rb;
 
+    private UnityAction listener;
 
 
     #endregion
@@ -64,6 +66,17 @@ public class PlayerController : MonoBehaviour
         capsule = GetComponent<CapsuleCollider>();
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = true;
+        listener = new UnityAction(OpenEyes);
+    }
+
+    void OnEnable()
+    {
+        EventManager.StartListening("Looking", listener);
+    }
+
+    void OnDisable()
+    {
+        EventManager.StopListening("Looking", listener);
     }
 
     /// <summary>
@@ -87,6 +100,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Stop") && grounded)
         {
             Debug.Log("I'm stopping");
+            EventManager.TriggerEvent("Looking");
         }
 
 
@@ -164,6 +178,12 @@ public class PlayerController : MonoBehaviour
 
     #region Methods
 
+    private void OpenEyes()
+    {
+        Debug.Log("I can see a beautiful world!");
+    }
+
+
     private void RotateCamera(float turnX)
     {
         turnX = turnX * sensitivityX;
@@ -186,8 +206,8 @@ public class PlayerController : MonoBehaviour
             currentRotation.x = Clamp(currentRotation.x, 270, 360);
         }
 
-                Debug.Log(camera.transform.rotation.eulerAngles);
-                Debug.Log(currentRotation);
+               // Debug.Log(camera.transform.rotation.eulerAngles);
+               // Debug.Log(currentRotation);
 
         camera.transform.rotation = Quaternion.Euler(currentRotation);
 
