@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class playerInteract : MonoBehaviour {
+public class PlayerInteract : MonoBehaviour {
 
     // This will determine the max distance the interact can be triggered from
     public float maxInteractDist;
@@ -37,7 +37,7 @@ public class playerInteract : MonoBehaviour {
                     Debug.DrawRay(transform.position, hit.transform.position, Color.red, 0.5f);
 
                     // Send a message to the game object we hit
-                    hit.transform.gameObject.SendMessage("interact");
+                    hit.transform.gameObject.SendMessage("Interact");
 
                     // Reset the trigger
                     trigger = false;

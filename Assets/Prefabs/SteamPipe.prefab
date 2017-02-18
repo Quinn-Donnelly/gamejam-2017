@@ -22,8 +22,6 @@ GameObject:
   - 33: {fileID: 33421875579886192}
   - 136: {fileID: 136377510702645372}
   - 23: {fileID: 23378259327877522}
-  - 114: {fileID: 114683953277810738}
-  - 82: {fileID: 82153523504649232}
   m_Layer: 0
   m_Name: Steam
   m_TagString: Untagged
@@ -43,6 +41,8 @@ GameObject:
   - 136: {fileID: 136357421033981724}
   - 23: {fileID: 23754595216478466}
   - 54: {fileID: 54099199461091474}
+  - 114: {fileID: 114000013772944186}
+  - 82: {fileID: 82000014128208968}
   m_Layer: 0
   m_Name: SteamPipe
   m_TagString: Untagged
@@ -164,12 +164,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!82 &82153523504649232
+--- !u!82 &82000014128208968
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1334257393962440}
+  m_GameObject: {fileID: 1353318120387162}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -177,7 +177,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   Priority: 128
@@ -238,18 +238,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114683953277810738
+--- !u!114 &114000013772944186
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1334257393962440}
+  m_GameObject: {fileID: 1353318120387162}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e68b31e3b490d2143a8a9da64a92a1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steam: {fileID: 1334257393962440}
+  steam: {fileID: 0}
   sound: {fileID: 0}
   isOn: 0
   toggleRate: 1
