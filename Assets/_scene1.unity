@@ -100,7 +100,7 @@ GameObject:
   - 4: {fileID: 93704711}
   - 108: {fileID: 93704710}
   m_Layer: 0
-  m_Name: 
+  m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,7 +166,7 @@ GameObject:
   - 23: {fileID: 240721135}
   - 54: {fileID: 240721134}
   m_Layer: 0
-  m_Name: 
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -261,7 +261,7 @@ GameObject:
   - 23: {fileID: 1184645068}
   - 54: {fileID: 1184645067}
   m_Layer: 0
-  m_Name: 
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,7 +355,7 @@ GameObject:
   - 64: {fileID: 1788542134}
   - 23: {fileID: 1788542133}
   m_Layer: 0
-  m_Name: 
+  m_Name: Ground Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -477,7 +477,7 @@ GameObject:
   - 124: {fileID: 1867849085}
   - 81: {fileID: 1867849084}
   m_Layer: 0
-  m_Name: 
+  m_Name: Main Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -564,7 +564,7 @@ GameObject:
   - 23: {fileID: 1907542367}
   - 54: {fileID: 1907542366}
   m_Layer: 0
-  m_Name: 
+  m_Name: Steam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -659,7 +659,7 @@ GameObject:
   - 23: {fileID: 1926403575}
   - 54: {fileID: 1926403574}
   m_Layer: 0
-  m_Name: 
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
