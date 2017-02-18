@@ -29,20 +29,17 @@ public class PlayerInteract : MonoBehaviour {
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, maxInteractDist))
             {
                 if (hit.distance <= maxInteractDist)
                 {
-                    // TODO: delete this line. used to test when interact can be triggered
-                    Debug.DrawRay(transform.position, hit.transform.position, Color.red, 0.5f);
-
                     // Send a message to the game object we hit
                     hit.transform.gameObject.SendMessage("Interact");
-
-                    // Reset the trigger
-                    trigger = false;
                 }
             }
+
+            // Reset the trigger
+            trigger = false;
         }
     }
 }

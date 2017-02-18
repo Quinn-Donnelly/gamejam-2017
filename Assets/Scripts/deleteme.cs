@@ -22,6 +22,11 @@ public class deleteme : MonoBehaviour {
         EventManager.StopListening("Looking", listener);
     }
 
+    void Interact()
+    {
+        Debug.Log("DONT TOUCH ME!");
+    }
+
     void someFunc()
     {
         Debug.Log("Hello Nick");
