@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -19,6 +20,10 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Properties (public)
+
+    // Damage
+        // this is the velocity floor that will cause dmg to uccur 
+    public float damageThreshold;
 
     // Speeds
     public float walkSpeed = 8.0f;
@@ -50,8 +55,10 @@ public class PlayerController : MonoBehaviour
 
     private Camera camera;
     private Rigidbody rb;
+    private Queue<Vector3> oldVelocitys;
 
-    private UnityAction listener;
+    private UnityAction openEyesListener;
+    private UnityAction closedEyesListener;
 
 
     #endregion
@@ -66,17 +73,20 @@ public class PlayerController : MonoBehaviour
         capsule = GetComponent<CapsuleCollider>();
         GetComponent<Rigidbody>().freezeRotation = true;
         GetComponent<Rigidbody>().useGravity = true;
-        listener = new UnityAction(OpenEyes);
+        openEyesListener = new UnityAction(OpenEyes);
+        closedEyesListener = new UnityAction(CloseEyes);
     }
 
     void OnEnable()
     {
-        EventManager.StartListening("Looking", listener);
+        EventManager.StartListening("Eyes Open", openEyesListener);
+        EventManager.StartListening("Eyes Closed", closedEyesListener);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("Looking", listener);
+        EventManager.StopListening("Eyes Open", openEyesListener);
+        EventManager.StopListening("Eyes Closed", closedEyesListener);
     }
 
     /// <summary>
@@ -86,6 +96,7 @@ public class PlayerController : MonoBehaviour
     {
         camera = GetComponentInChildren<Camera>();
         rb = GetComponent<Rigidbody>();
+        oldVelocitys = new Queue<Vector3>();
     }
 
     /// <summary>
@@ -99,11 +110,22 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Stop") && grounded)
         {
-            Debug.Log("I'm stopping");
-            EventManager.TriggerEvent("Looking");
+            EventManager.TriggerEvent("Eyes Open");
         }
+        if (Input.GetButtonDown("Go") && grounded)
+        {
+            EventManager.TriggerEvent("Eyes Closed");
+        }
+    }
 
-
+    void LateUpdate()
+    {
+        // Add the new velocity and get rid of oldest
+        oldVelocitys.Enqueue(rb.velocity);
+        if(oldVelocitys.Count > 3)
+        {
+            oldVelocitys.Dequeue();
+        }
     }
 
     /// <summary>
@@ -172,6 +194,19 @@ public class PlayerController : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         TrackGrounded(col);
+
+        // Calc Fall Damage
+        // Tracks the average velocity over the last three frames
+        Vector3 avg = Vector3.zero;
+        for(int i = 0; i < oldVelocitys.Count; ++i)
+        {
+            avg += oldVelocitys.ToArray()[i];
+        }
+        avg = avg / oldVelocitys.Count;
+        if((-1*avg.y) > damageThreshold)
+        {
+            Debug.Log("You have taken fall damage");
+        }
     }
 
     #endregion
@@ -181,6 +216,11 @@ public class PlayerController : MonoBehaviour
     private void OpenEyes()
     {
         Debug.Log("I can see a beautiful world!");
+    }
+
+    private void CloseEyes()
+    {
+        Debug.Log("Its pitch black");
     }
 
 
