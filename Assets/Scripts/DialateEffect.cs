@@ -5,9 +5,8 @@ using System.Collections;
 public class DialateEffect : MonoBehaviour
 {
 
-    public int size;
+    public float intensity;
     private Material material;
-    RenderTexture posMap;
 
     void Start()
     {
@@ -16,21 +15,14 @@ public class DialateEffect : MonoBehaviour
     // Creates a private material used to the effect
     void Awake()
     {
-        material = new Material(Shader.Find("PointCloud/PointDialate"));
+        material = new Material(Shader.Find("Hidden/DamageShader"));
     }
 
     // Postprocess the image
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if (size == 0)
-        {
-            Graphics.Blit(source, destination);
-            return;
-        }
 
-        material.SetFloat("_samples", size);
-        material.SetFloat("_sampleSizeX", 1f / Screen.currentResolution.width);
-        material.SetFloat("_sampleSizeY", 1f / Screen.currentResolution.height);
+        material.SetFloat("_intensity", intensity);
         Graphics.Blit(source, destination, material);
     }
 }
