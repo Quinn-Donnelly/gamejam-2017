@@ -52,6 +52,10 @@ public class PlayerController : MonoBehaviour
     Vector3 rotationX;
     Vector3 rotationY;
 
+    // Player Health
+    public float maxHealth;
+
+
     float MinClamp = -80f;
     float MaxClamp = 70f;
 
@@ -61,6 +65,8 @@ public class PlayerController : MonoBehaviour
 
     private UnityAction openEyesListener;
     private UnityAction closedEyesListener;
+
+    private float currentHealth;
 
 
     #endregion
@@ -99,6 +105,7 @@ public class PlayerController : MonoBehaviour
         camera = GetComponentInChildren<Camera>();
         rb = GetComponent<Rigidbody>();
         oldVelocitys = new Queue<Vector3>();
+        currentHealth = maxHealth;
     }
 
     /// <summary>
@@ -117,6 +124,11 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetAxis("Stop") == 0 && frozen)
         {
             EventManager.TriggerEvent("Eyes Closed");
+        }
+
+        if (Input.GetButtonDown("ResetCamera"))
+        {
+            ResetCamera();
         }
     }
 
@@ -214,6 +226,7 @@ public class PlayerController : MonoBehaviour
         if((-1*avg.y) > damageThreshold)
         {
             Debug.Log("You have taken fall damage");
+
         }
     }
 
@@ -221,20 +234,24 @@ public class PlayerController : MonoBehaviour
 
     #region Methods
 
+    void ApplyDamage(float dmg)
+    {
+        currentHealth -= dmg;
+        if(currentHealth <= 0)
+        {
+            EventManager.TriggerEvent("Player Death");
+            Debug.Log("You Have Died");
+        }
+    }
+
     private void OpenEyes()
     {
         Freeze();
-//        Debug.Log("I can see a beautiful world!");
-//        GameObject.Find("CameraRig").gameObject.stopRecording();
-
-//        GameObject.Find("CameraRig").gameObject.transform.position = GetComponentInChildren<Camera>().transform.position;
-//        GameObject.Find("CameraRig").gameObject.transform.rotation = GetComponentInChildren<Camera>().transform.rotation;
     }
 
     private void CloseEyes()
     {
         Freeze();
-//        Debug.Log("Its pitch black");
     }
 
     private void Freeze()
@@ -243,10 +260,7 @@ public class PlayerController : MonoBehaviour
 
         if (frozen)
         {
-
-//            Debug.Log(rb.velocity);
             tempVel = rb.velocity;
-//            Debug.Log(tempVel);
             rb.constraints = RigidbodyConstraints.FreezePosition;
         }
         else
@@ -256,12 +270,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void RotateCamera(float turnX)
     {
         turnX = turnX * sensitivityX;
-//        turnX = Mathf.Clamp(turnX, -90f, 90f);
-        //rotationX.Set(turnX, 0f, 0f);
 
         Vector3 currentRotation = camera.transform.rotation.eulerAngles;
         currentRotation.x += turnX;
@@ -269,7 +280,6 @@ public class PlayerController : MonoBehaviour
         
         camera.transform.rotation = deltaRotation;
 
-        //Vector3 currentRotation = camera.transform.rotation.eulerAngles;
         if (currentRotation.x > 60 && currentRotation.x < 200)
         {
             currentRotation.x = Clamp(currentRotation.x, 1, 60);
@@ -278,9 +288,6 @@ public class PlayerController : MonoBehaviour
         {
             currentRotation.x = Clamp(currentRotation.x, 270, 360);
         }
-
-               // Debug.Log(camera.transform.rotation.eulerAngles);
-               // Debug.Log(currentRotation);
 
         camera.transform.rotation = Quaternion.Euler(currentRotation);
 
@@ -292,6 +299,16 @@ public class PlayerController : MonoBehaviour
         rotationY = rotationY * sensitivityX;
         Quaternion deltaRotation = Quaternion.Euler(rotationY);
         rb.MoveRotation(rb.rotation * deltaRotation);
+    }
+
+    private void ResetCamera()
+    {
+//        rb.transform.rotation.x = GetComponentInChildren<Camera>.transform.rotation.x;
+        Vector3 newRotation = camera.transform.rotation.eulerAngles;
+        newRotation = new Vector3(0, newRotation.y, 0);
+
+        camera.transform.rotation = Quaternion.Euler(camera.transform.rotation.x, camera.transform.rotation.y - newRotation.y , camera.transform.rotation.z);
+        rb.transform.rotation = Quaternion.Euler(newRotation);
     }
 
     private float Clamp(float angle, float min, float max)
