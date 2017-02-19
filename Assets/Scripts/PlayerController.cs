@@ -19,12 +19,24 @@ public class PlayerController : MonoBehaviour
     private bool frozen = false;
     private Vector3 tempVel;
 
+    private Camera camera;
+    private Rigidbody rb;
+    private Queue<Vector3> oldVelocitys;
+
+    private UnityAction openEyesListener;
+    private UnityAction closedEyesListener;
+
+    private float currentHealth;
+    private float currentFP;
+
+    private float tickrate = 0.1f;
+
     #endregion
 
     #region Properties (public)
 
     // Damage
-        // this is the velocity floor that will cause dmg to uccur 
+    // this is the velocity floor that will cause dmg to occur 
     public float damageThreshold;
 
     // Speeds
@@ -53,29 +65,18 @@ public class PlayerController : MonoBehaviour
     Vector3 rotationY;
 
     // Player Health
-    public float maxHealth;
-
+    public float maxHealth = 100f;
+    public float maxFP = 100f;
+    public float FPDrainRate = 5f;
+    public float FPRegenRate = 2f;
 
     float MinClamp = -80f;
     float MaxClamp = 70f;
-
-    private Camera camera;
-    private Rigidbody rb;
-    private Queue<Vector3> oldVelocitys;
-
-    private UnityAction openEyesListener;
-    private UnityAction closedEyesListener;
-
-    private float currentHealth;
-
 
     #endregion
 
     #region Unity event functions
 
-    /// <summary>
-    /// Use for initialization
-    /// </summary>
     void Awake()
     {
         capsule = GetComponent<CapsuleCollider>();
@@ -97,20 +98,16 @@ public class PlayerController : MonoBehaviour
         EventManager.StopListening("Eyes Closed", closedEyesListener);
     }
 
-    /// <summary>
-    /// Use this for initialization
-    /// </summary>
     void Start()
     {
         camera = GetComponentInChildren<Camera>();
         rb = GetComponent<Rigidbody>();
         oldVelocitys = new Queue<Vector3>();
         currentHealth = maxHealth;
+        currentFP = maxFP;
+        InvokeRepeating("ManageFP", 0f, tickrate);
     }
 
-    /// <summary>
-    /// Update is called once per frame
-    /// </summary>
     void Update()
     {
         // Cache the input
@@ -142,9 +139,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /// <summary>
     /// Update for physics
-    /// </summary>
     void FixedUpdate()
     {
         // Cache de input
@@ -153,7 +148,6 @@ public class PlayerController : MonoBehaviour
 
         if (!frozen)
         {
-
             // On the ground
             if (grounded)
             {
@@ -184,7 +178,6 @@ public class PlayerController : MonoBehaviour
             if (rb.velocity.sqrMagnitude > maxVelocity)
             {
                 rb.velocity *= 0.98f;
-
             }
         }
 
@@ -234,7 +227,7 @@ public class PlayerController : MonoBehaviour
 
     #region Methods
 
-    void ApplyDamage(float dmg)
+    public void ApplyPlayerDamage(float dmg)
     {
         currentHealth -= dmg;
         if(currentHealth <= 0)
@@ -247,6 +240,7 @@ public class PlayerController : MonoBehaviour
     private void OpenEyes()
     {
         Freeze();
+        currentFP -= 25;
     }
 
     private void CloseEyes()
@@ -268,6 +262,20 @@ public class PlayerController : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             rb.velocity = tempVel;
         }
+    }
+
+    private void ManageFP()
+    {
+        Debug.Log("current FP: " +  currentFP.ToString());
+        if (frozen)
+        {
+            currentFP -= FPDrainRate*tickrate;
+        }
+        else
+        {
+            currentFP += FPRegenRate*tickrate;
+        }
+        currentFP = Mathf.Clamp(currentFP, 0, 100);
     }
 
     private void RotateCamera(float turnX)
