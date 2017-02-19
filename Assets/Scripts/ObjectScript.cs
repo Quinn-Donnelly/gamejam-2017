@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ObjectScript : MonoBehaviour {
     public GameObject thing;
@@ -9,8 +10,26 @@ public class ObjectScript : MonoBehaviour {
     public float speed = 0.5f;
     public bool isLoop;
     public bool isPatrol;
+    public bool frozen;
     public Transform[] targets;
     public int targetIterator = 0;
+
+    private UnityAction listener;
+
+    private void Awake()
+    {
+        listener = new UnityAction(Freeze);
+    }
+
+    void OnEnable()
+    {
+        EventManager.StartListening("Looking", listener);
+    }
+
+    void OnDisable()
+    {
+        EventManager.StopListening("Looking", listener);
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -20,8 +39,11 @@ public class ObjectScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        currentLocation = thing.transform;
-        MoveTo(targetLocation);
+        if (!frozen)
+        {
+            currentLocation = thing.transform;
+            MoveTo(targetLocation);
+        }
 	}
 
     void MoveTo(Transform target)
@@ -48,4 +70,10 @@ public class ObjectScript : MonoBehaviour {
             }
         }
     }
+
+    void Freeze()
+    {
+        frozen = !frozen;
+    }
+
 }

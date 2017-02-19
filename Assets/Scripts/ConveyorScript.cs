@@ -1,10 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ConveyorScript : MonoBehaviour {
     public GameObject conveyorBelt;
     public float power = 0.15f;
+    public bool frozen;
+
+    private UnityAction listener;
+
+    private void Awake()
+    {
+        listener = new UnityAction(Freeze);
+    }
+
+    void OnEnable()
+    {
+        EventManager.StartListening("Looking", listener);
+    }
+
+    void OnDisable()
+    {
+        EventManager.StopListening("Looking", listener);
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -18,11 +37,15 @@ public class ConveyorScript : MonoBehaviour {
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("test");
-        if (other.attachedRigidbody)
+        if (other.attachedRigidbody && !frozen)
         {
             other.attachedRigidbody.AddForce(conveyorBelt.transform.forward * power, ForceMode.Force);
         }
+    }
+
+    void Freeze()
+    {
+        frozen = !frozen;
     }
 
 }

@@ -24,7 +24,10 @@ public class FireVentScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        if (isOn)
+        {
 
+        }
     }
 
     void Pressed()
@@ -44,14 +47,10 @@ public class FireVentScript : MonoBehaviour {
                 if (isOn)
                 {
                     isOn = false;
-                    sound.Stop();
-                    fireMesh.enabled = false;
                 }
                 else
                 {
                     isOn = true;
-                    sound.Play();
-                    fireMesh.enabled = true;
                 }
             }
             yield return new WaitForSeconds(flareRate);
