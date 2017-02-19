@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
 
     // Inputs Cache
     private bool jumpFlag = false;
+    private bool frozen = false;
+    private Vector3 tempVel;
 
     #endregion
 
@@ -108,11 +110,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && grounded)
             jumpFlag = true;
 
-        if (Input.GetButtonDown("Stop") && grounded)
+        if (Input.GetAxis("Stop") > 0 && !frozen)
         {
             EventManager.TriggerEvent("Eyes Open");
         }
-        if (Input.GetButtonDown("Go") && grounded)
+        else if (Input.GetAxis("Stop") == 0 && frozen)
         {
             EventManager.TriggerEvent("Eyes Closed");
         }
@@ -136,42 +138,48 @@ public class PlayerController : MonoBehaviour
         // Cache de input
         var inputVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        // On the ground
-        if (grounded)
-        {
-            // Apply a force that attempts to reach our target velocity
-            var velocityChange = CalculateVelocityChange(inputVector);
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
-            // Jump
-            if (canJump && jumpFlag)
+        if (!frozen)
+        {
+
+            // On the ground
+            if (grounded)
             {
-                jumpFlag = false;
-                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + CalculateJumpVerticalSpeed(), rb.velocity.z);
+                // Apply a force that attempts to reach our target velocity
+                var velocityChange = CalculateVelocityChange(inputVector);
+                rb.AddForce(velocityChange, ForceMode.VelocityChange);
+
+                // Jump
+                if (canJump && jumpFlag)
+                {
+                    jumpFlag = false;
+                    rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y + CalculateJumpVerticalSpeed(), rb.velocity.z);
+                }
+
+                // By setting the grounded to false in every FixedUpdate we avoid
+                // checking if the character is not grounded on OnCollisionExit()
+                grounded = false;
+            }
+            // In mid-air
+            else
+            {
+                // Uses the input vector to affect the mid air direction
+                var velocityChange = transform.TransformDirection(inputVector)*inAirControl;
+                rb.AddForce(velocityChange, ForceMode.VelocityChange);
             }
 
-            // By setting the grounded to false in every FixedUpdate we avoid
-            // checking if the character is not grounded on OnCollisionExit()
-            grounded = false;
-        }
-        // In mid-air
-        else
-        {
-            // Uses the input vector to affect the mid air direction
-            var velocityChange = transform.TransformDirection(inputVector) * inAirControl;
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
-        }
+            //fix this if we need the player to actually go faster than maxVelocity due to force 
+            if (rb.velocity.sqrMagnitude > maxVelocity)
+            {
+                rb.velocity *= 0.98f;
 
-        //fix this if we need the player to actually go faster than maxVelocity due to force 
-        if (rb.velocity.sqrMagnitude > maxVelocity)
-        {
-            rb.velocity *= 0.98f;
-
+            }
         }
 
         //Camera related things
         float turnY = Input.GetAxisRaw("CameraHorizontal");
         float turnX = Input.GetAxisRaw("CameraVertical");
+        
 
         RotatePlayer(turnY);
         RotateCamera(turnX);
@@ -215,12 +223,37 @@ public class PlayerController : MonoBehaviour
 
     private void OpenEyes()
     {
-        Debug.Log("I can see a beautiful world!");
+        Freeze();
+//        Debug.Log("I can see a beautiful world!");
+//        GameObject.Find("CameraRig").gameObject.stopRecording();
+
+//        GameObject.Find("CameraRig").gameObject.transform.position = GetComponentInChildren<Camera>().transform.position;
+//        GameObject.Find("CameraRig").gameObject.transform.rotation = GetComponentInChildren<Camera>().transform.rotation;
     }
 
     private void CloseEyes()
     {
-        Debug.Log("Its pitch black");
+        Freeze();
+//        Debug.Log("Its pitch black");
+    }
+
+    private void Freeze()
+    {
+        frozen = !frozen;
+
+        if (frozen)
+        {
+
+//            Debug.Log(rb.velocity);
+            tempVel = rb.velocity;
+//            Debug.Log(tempVel);
+            rb.constraints = RigidbodyConstraints.FreezePosition;
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.velocity = tempVel;
+        }
     }
 
 
@@ -253,6 +286,14 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void RotatePlayer(float turnY)
+    {
+        rotationY.Set(0f, turnY, 0f);
+        rotationY = rotationY * sensitivityX;
+        Quaternion deltaRotation = Quaternion.Euler(rotationY);
+        rb.MoveRotation(rb.rotation * deltaRotation);
+    }
+
     private float Clamp(float angle, float min, float max)
     {
         if (angle < min)
@@ -263,16 +304,6 @@ public class PlayerController : MonoBehaviour
             return max;
         else
             return angle;
-    }
-
-
-
-    private void RotatePlayer(float turnY)
-    {
-        rotationY.Set(0f, turnY, 0f);
-        rotationY = rotationY * sensitivityX;
-        Quaternion deltaRotation = Quaternion.Euler(rotationY);
-        rb.MoveRotation(rb.rotation * deltaRotation);
     }
 
     // From the user input calculate using the set up speeds the velocity change
