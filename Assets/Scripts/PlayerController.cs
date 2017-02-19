@@ -52,6 +52,10 @@ public class PlayerController : MonoBehaviour
     Vector3 rotationX;
     Vector3 rotationY;
 
+    // Player Health
+    public float maxHealth;
+
+
     float MinClamp = -80f;
     float MaxClamp = 70f;
 
@@ -61,6 +65,8 @@ public class PlayerController : MonoBehaviour
 
     private UnityAction openEyesListener;
     private UnityAction closedEyesListener;
+
+    private float currentHealth;
 
 
     #endregion
@@ -99,6 +105,7 @@ public class PlayerController : MonoBehaviour
         camera = GetComponentInChildren<Camera>();
         rb = GetComponent<Rigidbody>();
         oldVelocitys = new Queue<Vector3>();
+        currentHealth = maxHealth;
     }
 
     /// <summary>
@@ -214,12 +221,23 @@ public class PlayerController : MonoBehaviour
         if((-1*avg.y) > damageThreshold)
         {
             Debug.Log("You have taken fall damage");
+
         }
     }
 
     #endregion
 
     #region Methods
+
+    void ApplyDamage(float dmg)
+    {
+        currentHealth -= dmg;
+        if(currentHealth <= 0)
+        {
+            EventManager.TriggerEvent("Player Death");
+            Debug.Log("You Have Died");
+        }
+    }
 
     private void OpenEyes()
     {
