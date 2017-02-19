@@ -36,6 +36,15 @@ public class CameraFreeze : MonoBehaviour {
 
     void eyesOpen()
     {
+        Debug.Log("Camera GO");
+        for (int i = 0; i < cameras.Length; ++i)
+        {
+            cameras[i].gameObject.SetActive(true);
+        }
+    }
+
+    void eyesClosed()
+    {
         Debug.Log("Camera Freeze");
         for(int i = 0; i < cameras.Length; ++i)
         {
@@ -43,12 +52,4 @@ public class CameraFreeze : MonoBehaviour {
         }
     }
 
-    void eyesClosed()
-    {
-        Debug.Log("Camera GO");
-        for (int i = 0; i < cameras.Length; ++i)
-        {
-            cameras[i].gameObject.SetActive(true);
-        }
-    }
 }
