@@ -12,6 +12,7 @@ public class SteamPipeScript : MonoBehaviour {
 
     private bool active;
     private MeshRenderer steamMesh;
+    public Collider steamCollider;
     private UnityAction listener;
 
     private void Awake()
@@ -21,21 +22,26 @@ public class SteamPipeScript : MonoBehaviour {
 
     void OnEnable()
     {
-        EventManager.StartListening("Looking", listener);
+        EventManager.StartListening("Eyes Open", listener);
+        EventManager.StartListening("Eyes Closed", listener);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("Looking", listener);
+        EventManager.StopListening("Eyes Open", listener);
+        EventManager.StopListening("Eyes Closed", listener);
     }
 
 	// Use this for initialization
 	void Start () {
 		isOn = true;
         active = true;
+        steam = gameObject.transform.GetChild(0).gameObject;
         sound = GetComponent<AudioSource>();
-        steamMesh = this.gameObject.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
+        steamMesh = steam.GetComponent<MeshRenderer>();
+        steamCollider = steam.GetComponent<Collider>();
         StartCoroutine(SteamLoop());
+        frozen = false;
 	}
 	
 	// Update is called once per frame
@@ -64,12 +70,14 @@ public class SteamPipeScript : MonoBehaviour {
                         isOn = false;
                         sound.Stop();
                         steamMesh.enabled = false;
+                        steamCollider.enabled = false;
                     }
                     else
                     {
                         isOn = true;
                         sound.Play();
                         steamMesh.enabled = true;
+                        steamCollider.enabled = true;
                     }
                 }
             }

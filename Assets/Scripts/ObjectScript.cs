@@ -13,6 +13,7 @@ public class ObjectScript : MonoBehaviour {
     public bool frozen;
     public Transform[] targets;
     public int targetIterator = 0;
+    public float damageOnHit;
 
     private UnityAction listener;
 
@@ -23,12 +24,14 @@ public class ObjectScript : MonoBehaviour {
 
     void OnEnable()
     {
-        EventManager.StartListening("Looking", listener);
+        EventManager.StartListening("Eyes Open", listener);
+        EventManager.StartListening("Eyes Closed", listener);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("Looking", listener);
+        EventManager.StopListening("Eyes Open", listener);
+        EventManager.StopListening("Eyes Closed", listener);
     }
 
 	// Use this for initialization
@@ -68,6 +71,14 @@ public class ObjectScript : MonoBehaviour {
             {
 
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.SendMessage("ApplyDamage", damageOnHit);
         }
     }
 
