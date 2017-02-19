@@ -18,12 +18,14 @@ public class BoxScript : MonoBehaviour {
 
     void OnEnable()
     {
-        EventManager.StartListening("Looking", listener);
+        EventManager.StartListening("Eyes Open", listener);
+        EventManager.StartListening("Eyes Closed", listener);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening("Looking", listener);
+        EventManager.StopListening("Eyes Open", listener);
+        EventManager.StopListening("Eyes Closed", listener);
     }
 
 	// Use this for initialization
