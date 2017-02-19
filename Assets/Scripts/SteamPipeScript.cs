@@ -9,6 +9,7 @@ public class SteamPipeScript : MonoBehaviour {
     public bool isOn;
     public float toggleRate = 2.0f;
     public bool frozen;
+    private bool isAlwaysOn = false;
 
     private bool active;
     private MeshRenderer steamMesh;
@@ -40,6 +41,11 @@ public class SteamPipeScript : MonoBehaviour {
         sound = GetComponent<AudioSource>();
         steamMesh = steam.GetComponent<MeshRenderer>();
         steamCollider = steam.GetComponent<Collider>();
+
+        if (toggleRate <= 0)
+        {
+            isAlwaysOn = true;
+        }
         StartCoroutine(SteamLoop());
         frozen = false;
 	}
@@ -51,8 +57,10 @@ public class SteamPipeScript : MonoBehaviour {
 
     void Pressed()
     {
+        Debug.Log("Pipe toggled");
         active = !active;
         isOn = false;
+        steamCollider.enabled = !steamCollider.enabled;
         sound.Stop();
         steamMesh.enabled = false;
     }
@@ -67,15 +75,22 @@ public class SteamPipeScript : MonoBehaviour {
                 {
                     if (isOn)
                     {
-                        isOn = false;
-                        sound.Stop();
-                        steamMesh.enabled = false;
-                        steamCollider.enabled = false;
+                        
+                            isOn = false;
+                        if (!isAlwaysOn)
+                        {
+                            sound.Stop();
+                            steamMesh.enabled = false;
+                            steamCollider.enabled = false;
+                        }
                     }
                     else
                     {
                         isOn = true;
-                        sound.Play();
+                        if (!sound.isPlaying)
+                        {
+                            sound.Play();
+                        }
                         steamMesh.enabled = true;
                         steamCollider.enabled = true;
                     }

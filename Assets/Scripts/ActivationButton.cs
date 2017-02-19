@@ -8,6 +8,8 @@ public class ActivationButton : MonoBehaviour {
 
     void Interact()
     {
+        GetComponent<AudioSource>().Play();
+        Debug.Log("pressed button");
         for(int i = 0; i < hazards.Length; ++i)
         {
             hazards[i].SendMessage("Pressed");

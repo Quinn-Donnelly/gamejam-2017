@@ -288,7 +288,7 @@ public class PlayerController : MonoBehaviour
 
     private void ManageFP()
     {
-        Debug.Log("current FP: " +  currentFP.ToString());
+        //Debug.Log("current FP: " +  currentFP.ToString());
         if (frozen)
         {
             currentFP -= FPDrainRate*tickrate;

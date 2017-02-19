@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SteamScript : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+    public float damageRate = 5.0f;
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -16,7 +16,7 @@ public class SteamScript : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        other.gameObject.SendMessage("ApplyPlayerDamage", 5.0f);
+        other.gameObject.SendMessage("ApplyPlayerDamage", damageRate);
         Debug.Log("take damage from steam");
     }
 }
