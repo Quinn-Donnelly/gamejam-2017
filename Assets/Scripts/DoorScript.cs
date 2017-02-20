@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ObjectScript : MonoBehaviour {
+public class DoorScript : MonoBehaviour {
     public GameObject thing;
     public Transform currentLocation;
     public Transform targetLocation;
     public float speed = 0.5f;
-    public bool isLoop;
-    public bool isPatrol;
     public bool frozen;
+    public bool activated;
     public Transform[] targets;
     public int targetIterator = 0;
     public float damageOnHit;
@@ -45,8 +44,11 @@ public class ObjectScript : MonoBehaviour {
 	void Update () {
         if (!frozen)
         {
-            currentLocation = thing.transform;
-            MoveTo(targetLocation);
+            if(activated)
+            {
+                currentLocation = thing.transform;
+                MoveTo(targetLocation);
+            }
         }
 	}
 
@@ -54,10 +56,8 @@ public class ObjectScript : MonoBehaviour {
     {
         float step = speed * Time.deltaTime;
         thing.transform.position = Vector3.MoveTowards(currentLocation.position, targetLocation.position, step);
-        if (Vector3.Distance(thing.transform.position, target.position) < 1)
+        if (Vector3.Distance(thing.transform.position, target.position) < 0.1f)
         {
-            if (isLoop)
-            {
                 if (targetIterator >= targets.Length - 1)
                 {
                     targetIterator = 0;
@@ -67,25 +67,18 @@ public class ObjectScript : MonoBehaviour {
                     targetIterator++;
                 }
                 targetLocation = targets[targetIterator];
-            }
-            else if (isPatrol)
-            {
 
-            }
+                activated = false;
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void Pressed()
     {
-        if(collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.SendMessage("ApplyDamage", damageOnHit);
-        }
+        activated = true;
     }
 
     void Freeze()
     {
         frozen = !frozen;
     }
-
 }

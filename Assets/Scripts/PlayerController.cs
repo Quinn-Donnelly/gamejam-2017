@@ -229,12 +229,34 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyPlayerDamage(float dmg)
     {
+        Debug.Log("ehere");
         currentHealth -= dmg;
-        if(currentHealth <= 0)
+        StartCoroutine("damageFlash");
+        GetComponent<AudioSource>().Play();
+        Debug.Log(currentHealth);
+
+        if (currentHealth <= 0)
         {
             EventManager.TriggerEvent("Player Death");
             Debug.Log("You Have Died");
+            
         }
+    }
+
+    IEnumerator damageFlash()
+    {
+        DialateEffect effect = Camera.main.GetComponent<DialateEffect>();
+        for (float f = 0f; f <1; f += 0.25f)
+        {
+            effect.intensity = f;
+            yield return new WaitForSeconds(0.025f);
+        }
+        for (float f = 1f; f > 0; f -= 0.1f)
+        {
+            effect.intensity = f;
+            yield return new WaitForSeconds(.025f);
+        }
+        effect.intensity = 0;
     }
 
     private void OpenEyes()
