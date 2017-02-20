@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private UnityAction closedEyesListener;
 
     private float currentHealth;
-    private float currentFP;
+    public  float currentFP;
 
     private float tickrate = 0.1f;
 
@@ -67,8 +67,9 @@ public class PlayerController : MonoBehaviour
     // Player Health
     public float maxHealth = 100f;
     public float maxFP = 100f;
-    public float FPDrainRate = 5f;
-    public float FPRegenRate = 2f;
+    public float stopFPCost = 25;
+    public float FPDrainRate = 3f;
+    public float FPRegenRate = 5f;
 
     float MinClamp = -80f;
     float MaxClamp = 70f;
@@ -114,15 +115,14 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && grounded)
             jumpFlag = true;
 
-        if (Input.GetAxis("Stop") > 0 && !frozen)
+        if (Input.GetAxis("Stop") > 0 && !frozen && currentFP > stopFPCost)
         {
             EventManager.TriggerEvent("Eyes Open");
         }
-        else if (Input.GetAxis("Stop") == 0 && frozen)
+        else if ((Input.GetAxis("Stop") == 0 && frozen) || currentFP <= 0)
         {
             EventManager.TriggerEvent("Eyes Closed");
         }
-
         if (Input.GetButtonDown("ResetCamera"))
         {
             ResetCamera();
@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour
     private void OpenEyes()
     {
         Freeze();
-        currentFP -= 25;
+        currentFP -= stopFPCost;
     }
 
     private void CloseEyes()
@@ -266,7 +266,6 @@ public class PlayerController : MonoBehaviour
 
     private void ManageFP()
     {
-        Debug.Log("current FP: " +  currentFP.ToString());
         if (frozen)
         {
             currentFP -= FPDrainRate*tickrate;
