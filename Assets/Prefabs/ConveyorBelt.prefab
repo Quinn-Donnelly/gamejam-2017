@@ -16,39 +16,39 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4889204945924650}
-  - 33: {fileID: 33169824838657668}
-  - 65: {fileID: 65758489263623722}
-  - 23: {fileID: 23827146597427064}
-  - 114: {fileID: 114121313158803476}
-  m_Layer: 0
-  m_Name: 
+  - component: {fileID: 4889204945924650}
+  - component: {fileID: 33169824838657668}
+  - component: {fileID: 65758489263623722}
+  - component: {fileID: 23827146597427064}
+  - component: {fileID: 114121313158803476}
+  m_Layer: 8
+  m_Name: zone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1673102649028430
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4085510236183560}
-  - 33: {fileID: 33224422153458276}
-  - 65: {fileID: 65696212600595462}
-  - 23: {fileID: 23024379290130546}
-  - 54: {fileID: 54405783023364004}
-  m_Layer: 0
+  - component: {fileID: 4085510236183560}
+  - component: {fileID: 33224422153458276}
+  - component: {fileID: 65696212600595462}
+  - component: {fileID: 23024379290130546}
+  - component: {fileID: 54405783023364004}
+  m_Layer: 8
   m_Name: ConveyorBelt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4085510236183560
 Transform:
   m_ObjectHideFlags: 1
@@ -56,13 +56,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1673102649028430}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.92, y: 0.168, z: 1.73}
-  m_LocalScale: {x: 2.1128561, y: 0.25, z: 5.508259}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 16.21, y: 0.92, z: -24.12}
+  m_LocalScale: {x: 3.3840714, y: 0.25, z: 5.508259}
   m_Children:
   - {fileID: 4889204945924650}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4889204945924650
 Transform:
   m_ObjectHideFlags: 1
@@ -72,10 +72,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4085510236183560}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23024379290130546
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -90,7 +90,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -98,7 +100,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -119,7 +121,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -127,7 +131,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -199,4 +203,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   conveyorBelt: {fileID: 1673102649028430}
-  power: 10
+  power: 0.075
+  frozen: 0

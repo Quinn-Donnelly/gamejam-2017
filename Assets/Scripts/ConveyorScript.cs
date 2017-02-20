@@ -39,7 +39,7 @@ public class ConveyorScript : MonoBehaviour {
     {
         if (other.attachedRigidbody && !frozen)
         {
-            other.attachedRigidbody.AddForce(conveyorBelt.transform.forward * power, ForceMode.Force);
+            other.attachedRigidbody.AddForce(conveyorBelt.transform.forward.normalized * power, ForceMode.Force);
         }
     }
 

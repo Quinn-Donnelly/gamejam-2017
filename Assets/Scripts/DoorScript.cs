@@ -74,6 +74,7 @@ public class DoorScript : MonoBehaviour {
 
     void Pressed()
     {
+        Debug.Log("door open");
         activated = true;
     }
 
